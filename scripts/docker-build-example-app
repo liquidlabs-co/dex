@@ -4,8 +4,8 @@ mkdir -p _output/bin
 
 sudo docker run \
     --cidfile=cid-example-app \
-    -v $PWD:/go/src/github.com/coreos/dex:ro \
-    -w /go/src/github.com/coreos/dex \
+    -v $PWD:/go/src/github.com/liquidlabs-co/dex:ro \
+    -w /go/src/github.com/liquidlabs-co/dex \
     golang:1.8.0-alpine \
     /bin/sh -x -c \
     'apk add --no-cache --update alpine-sdk && make release-binary-example-app'

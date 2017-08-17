@@ -9,11 +9,13 @@ MAINTAINER Stijn De Haes <stijndehaes@gmail.com>
 # OpenSSL is required so wget can query HTTPS endpoints for health checking.
 RUN apk add --update ca-certificates openssl
 
-COPY _output/bin/example-app /usr/local/bin/example-app
+COPY _output/bin/example-app /bin/example-app
+RUN mkdir -p /static
+COPY _output/static/ /static
 
 WORKDIR /
 
-ENTRYPOINT ["example-app"]
+ENTRYPOINT ["./bin/example-app"]
 
 EXPOSE 5555
 
