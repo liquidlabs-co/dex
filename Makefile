@@ -1,12 +1,12 @@
 PROJ=dex
-ORG_PATH=github.com/coreos
+ORG_PATH=github.com/liquidlabs-co
 REPO_PATH=$(ORG_PATH)/$(PROJ)
 export PATH := $(PWD)/bin:$(PATH)
 
 VERSION ?= $(shell ./scripts/git-version)
 
-DOCKER_REPO=quay.io/coreos/dex
-DOCKER_REPO_EXAMPLE_APP=quay.io/coreos/dex-example-app
+DOCKER_REPO=quay.io/liquidlabs-co/dex
+DOCKER_REPO_EXAMPLE_APP=quay.io/liquidlabs-co/dex-example-app
 DOCKER_IMAGE=$(DOCKER_REPO):$(VERSION)
 DOCKER_IMAGE_EXAMPLE_APP=$(DOCKER_REPO_EXAMPLE_APP):$(VERSION)
 
@@ -27,6 +27,8 @@ bin/dex: check-go-version
 	@go install -v -ldflags $(LD_FLAGS) $(REPO_PATH)/cmd/dex
 
 bin/example-app: check-go-version
+	@mkdir -p static/
+	@cp -r cmd/example-app/static/ static/
 	@go install -v -ldflags $(LD_FLAGS) $(REPO_PATH)/cmd/example-app
 
 bin/grpc-client: check-go-version
@@ -69,6 +71,8 @@ _output/bin/dex:
 	@sudo chown $(user):$(group) _output/bin/dex
 
 _output/bin/example-app:
+	@mkdir -p _output/static/
+	@cp -r cmd/example-app/static/ _output/static/
 	@./scripts/docker-build-example-app
 	@sudo chown $(user):$(group) _output/bin/example-app
 
