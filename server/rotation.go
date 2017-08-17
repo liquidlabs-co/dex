@@ -12,7 +12,7 @@ import (
 	"gopkg.in/square/go-jose.v2"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/coreos/dex/storage"
+	"github.com/liquidlabs-co/dex/storage"
 )
 
 // rotationStrategy describes a strategy for generating cryptographic keys, how

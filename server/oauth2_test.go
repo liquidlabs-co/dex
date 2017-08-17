@@ -10,7 +10,7 @@ import (
 
 	jose "gopkg.in/square/go-jose.v2"
 
-	"github.com/coreos/dex/storage"
+	"github.com/liquidlabs-co/dex/storage"
 )
 
 func TestParseAuthorizationRequest(t *testing.T) {

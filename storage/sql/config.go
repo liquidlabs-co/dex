@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/coreos/dex/storage"
+	"github.com/liquidlabs-co/dex/storage"
 	"github.com/lib/pq"
 	sqlite3 "github.com/mattn/go-sqlite3"
 )

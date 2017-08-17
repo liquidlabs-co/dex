@@ -16,7 +16,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/kylelemons/godebug/pretty"
 
-	"github.com/coreos/dex/connector"
+	"github.com/liquidlabs-co/dex/connector"
 )
 
 const envVar = "DEX_LDAP_TESTS"
@@ -642,7 +642,7 @@ suffix "dc=example,dc=org"
 # root or superuser
 rootdn "cn=admin,dc=example,dc=org"
 rootpw admin
-# The database directory MUST exist prior to running slapd AND 
+# The database directory MUST exist prior to running slapd AND
 # change path as necessary
 directory	{{ .TempDir }}
 

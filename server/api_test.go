@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/coreos/dex/api"
-	"github.com/coreos/dex/server/internal"
-	"github.com/coreos/dex/storage"
-	"github.com/coreos/dex/storage/memory"
+	"github.com/liquidlabs-co/dex/api"
+	"github.com/liquidlabs-co/dex/server/internal"
+	"github.com/liquidlabs-co/dex/storage"
+	"github.com/liquidlabs-co/dex/storage/memory"
 	"google.golang.org/grpc"
 )
 

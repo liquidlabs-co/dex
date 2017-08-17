@@ -3,10 +3,10 @@ package main
 import (
 	"testing"
 
-	"github.com/coreos/dex/connector/mock"
-	"github.com/coreos/dex/connector/oidc"
-	"github.com/coreos/dex/storage"
-	"github.com/coreos/dex/storage/sql"
+	"github.com/liquidlabs-co/dex/connector/mock"
+	"github.com/liquidlabs-co/dex/connector/oidc"
+	"github.com/liquidlabs-co/dex/storage"
+	"github.com/liquidlabs-co/dex/storage/sql"
 	"github.com/ghodss/yaml"
 	"github.com/kylelemons/godebug/pretty"
 )
@@ -50,7 +50,7 @@ staticPasswords:
   hash: "$2a$10$33EMT0cVYVlPy6WAMCLsceLYjWhuHpbz5yuZxu/GAFj03J9Lytjuy"
   username: "admin"
   userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
-- email: "foo@example.com"  
+- email: "foo@example.com"
   # base64'd value of the same bcrypt hash above. We want to be able to parse both of these
   hash: "JDJhJDEwJDMzRU1UMGNWWVZsUHk2V0FNQ0xzY2VMWWpXaHVIcGJ6NXl1Wnh1L0dBRmowM0o5THl0anV5"
   username: "foo"

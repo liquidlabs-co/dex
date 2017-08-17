@@ -11,10 +11,10 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/coreos/dex/api"
-	"github.com/coreos/dex/server/internal"
-	"github.com/coreos/dex/storage"
-	"github.com/coreos/dex/version"
+	"github.com/liquidlabs-co/dex/api"
+	"github.com/liquidlabs-co/dex/server/internal"
+	"github.com/liquidlabs-co/dex/storage"
+	"github.com/liquidlabs-co/dex/version"
 )
 
 // apiVersion increases every time a new call is added to the API. Clients should use this info

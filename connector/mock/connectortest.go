@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/coreos/dex/connector"
+	"github.com/liquidlabs-co/dex/connector"
 )
 
 // NewCallbackConnector returns a mock connector which requires no user interaction. It always returns

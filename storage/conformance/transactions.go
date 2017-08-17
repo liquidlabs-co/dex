@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/coreos/dex/storage"
+	"github.com/liquidlabs-co/dex/storage"
 )
 
 // RunTransactionTests runs a test suite aimed a verifying the transaction

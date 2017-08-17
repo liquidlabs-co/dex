@@ -13,7 +13,7 @@ import (
 	"gopkg.in/ldap.v2"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/coreos/dex/connector"
+	"github.com/liquidlabs-co/dex/connector"
 )
 
 // Config holds the configuration parameters for the LDAP connector. The LDAP

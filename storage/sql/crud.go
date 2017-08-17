@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coreos/dex/storage"
+	"github.com/liquidlabs-co/dex/storage"
 )
 
 // TODO(ericchiang): The update, insert, and select methods queries are all
@@ -177,7 +177,7 @@ func (c *conn) GetAuthRequest(id string) (storage.AuthRequest, error) {
 
 func getAuthRequest(q querier, id string) (a storage.AuthRequest, err error) {
 	err = q.QueryRow(`
-		select 
+		select
 			id, client_id, response_types, scopes, redirect_uri, nonce, state,
 			force_approval_prompt, logged_in,
 			claims_user_id, claims_username, claims_email, claims_email_verified,
@@ -410,7 +410,7 @@ func (c *conn) UpdateKeys(updater func(old storage.Keys) (storage.Keys, error)) 
 		} else {
 			_, err = tx.Exec(`
 				update keys
-				set 
+				set
 				    verification_keys = $1,
 					signing_key = $2,
 					signing_key_pub = $3,
@@ -750,7 +750,7 @@ func (c *conn) UpdateConnector(id string, updater func(s storage.Connector) (sto
 		}
 		_, err = tx.Exec(`
 			update connector
-			set 
+			set
 			    type = $1,
 			    name = $2,
 			    resource_version = $3,
