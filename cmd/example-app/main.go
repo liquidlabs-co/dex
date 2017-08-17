@@ -23,7 +23,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const exampleAppState = "I wish to wash my irish wristwatch"
+const exampleAppState = "Start"
 
 type app struct {
 	clientID     string
@@ -176,11 +176,13 @@ func cmd() *cobra.Command {
 			a.provider = provider
 			a.verifier = provider.Verifier(&oidc.Config{ClientID: a.clientID})
 
+			http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 			http.HandleFunc("/", a.handleIndex)
 			http.HandleFunc("/login", a.handleLogin)
 			http.HandleFunc(u.Path, a.handleCallback)
 
-			switch listenURL.Scheme {
+
+ 			switch listenURL.Scheme {
 			case "http":
 				log.Printf("listening on %s", listen)
 				return http.ListenAndServe(listenURL.Host, nil)
