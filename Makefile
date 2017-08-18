@@ -5,8 +5,8 @@ export PATH := $(PWD)/bin:$(PATH)
 
 VERSION ?= $(shell ./scripts/git-version)
 
-DOCKER_REPO=quay.io/liquidlabs-co/dex
-DOCKER_REPO_EXAMPLE_APP=quay.io/liquidlabs-co/dex-example-app
+DOCKER_REPO=569325332953.dkr.ecr.us-east-1.amazonaws.com/dex
+DOCKER_REPO_EXAMPLE_APP=569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin
 DOCKER_IMAGE=$(DOCKER_REPO):$(VERSION)
 DOCKER_IMAGE_EXAMPLE_APP=$(DOCKER_REPO_EXAMPLE_APP):$(VERSION)
 
@@ -79,10 +79,12 @@ _output/bin/example-app:
 .PHONY: docker-image
 docker-image: clean-release _output/bin/dex
 	@sudo docker build -t $(DOCKER_IMAGE) .
+	@docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):latest
 
 .PHONY: docker-image-example-app
 docker-image-example-app: clean-release _output/bin/example-app
 	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
+	@docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
 
 .PHONY: proto
 proto: api/api.pb.go server/internal/types.pb.go
