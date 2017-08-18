@@ -2,13 +2,15 @@
 
 mkdir -p _output/bin
 
+sudo docker build -f Dockerfile-base -t golang-updated .
+
 sudo docker run \
     --cidfile=cid-example-app \
     -v $PWD:/go/src/github.com/liquidlabs-co/dex:ro \
     -w /go/src/github.com/liquidlabs-co/dex \
-    golang:1.8.0-alpine \
+    golang-updated \
     /bin/sh -x -c \
-    'apk add --no-cache --update alpine-sdk && make release-binary-example-app'
+    'make release-binary-example-app'
 
 sudo docker cp $( cat cid-example-app ):/go/bin/example-app _output/bin/example-app
 sudo docker rm $( cat cid-example-app )

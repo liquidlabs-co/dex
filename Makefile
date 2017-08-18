@@ -79,12 +79,12 @@ _output/bin/example-app:
 .PHONY: docker-image
 docker-image: clean-release _output/bin/dex
 	@sudo docker build -t $(DOCKER_IMAGE) .
-	@docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):latest
+	@sudo docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):latest
 
 .PHONY: docker-image-example-app
 docker-image-example-app: clean-release _output/bin/example-app
 	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
-	@docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
+	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
 
 .PHONY: proto
 proto: api/api.pb.go server/internal/types.pb.go

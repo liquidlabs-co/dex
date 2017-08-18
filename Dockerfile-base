@@ -1,0 +1,5 @@
+FROM golang:1.8.0-alpine
+
+RUN apk add --no-cache --update alpine-sdk
+
+CMD ["/bin/sh"]
