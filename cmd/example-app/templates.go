@@ -40,15 +40,21 @@ var tokenTmpl = template.Must(template.New("token.html").Parse(`<html>
   <link rel="stylesheet" href="/static/stylesheet.css">
   </head>
   <body>
-    <p> Token: <pre><code>{{ .IDToken }}</code></pre></p>
-    <p> Claims: <pre><code>{{ .Claims }}</code></pre></p>
-    {{ if .RefreshToken }}
-    <p> Refresh Token: <pre><code>{{ .RefreshToken }}</code></pre></p>
-    <form action="{{ .RedirectURL }}" method="post">
-      <input type="hidden" name="refresh_token" value="{{ .RefreshToken }}">
-      <input type="submit" value="Redeem refresh token">
-    </form>
-    {{ end }}
+    <div>
+      <p> Claims: <pre><code>{{ .Claims }}</code></pre></p>
+      <pre><code>
+
+      export K8S_TOKEN={{ .IDToken }}
+      export K8S_CLUSTER_NAME=hosting.gigster.com
+      export K8S_CA_FILE=~/cluster.ca.crt
+
+      kubectl config set-credentials github_profile --token=${K8S_TOKEN}
+      kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=${K8S_CA_FILE} --server=https://api.${K8S_CLUSTER_NAME} --embed-certs=true
+      kubectl config set-context {K8S_DEFAULT_CONTEXT} --namespace=default --user=github_profile --cluster=${K8S_CLUSTER_NAME}
+      kubectl config use-context {K8S_DEFAULT_CONTEXT}
+
+      </code></pre>
+    </div>
   </body>
 </html>
 `))
