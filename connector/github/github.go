@@ -233,10 +233,14 @@ func (c *githubConnector) HandleCallback(s connector.Scopes, r *http.Request) (i
 		return identity, fmt.Errorf("github: get user: %v", err)
 	}
 
+	/*
 	username := user.Name
 	if username == "" {
 		username = user.Login
 	}
+	*/
+	var username string = user.Login
+
 	identity = connector.Identity{
 		UserID:        strconv.Itoa(user.ID),
 		Username:      username,
@@ -293,10 +297,14 @@ func (c *githubConnector) Refresh(ctx context.Context, s connector.Scopes, ident
 		return identity, fmt.Errorf("github: get user: %v", err)
 	}
 
+	/*
 	username := user.Name
 	if username == "" {
 		username = user.Login
 	}
+	*/
+	var username string = user.Login
+
 	identity.Username = username
 	identity.Email = user.Email
 
