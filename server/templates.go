@@ -84,7 +84,7 @@ func dirExists(dir string) error {
 //
 func loadWebConfig(c webConfig) (static, theme http.Handler, templates *templates, err error) {
 	if c.theme == "" {
-		c.theme = "coreos"
+		c.theme = "gigster"
 	}
 	if c.issuer == "" {
 		c.issuer = "dex"
