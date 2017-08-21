@@ -11,7 +11,7 @@ import (
 	"github.com/liquidlabs-co/dex/server/internal"
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/liquidlabs-co/dex/storage/memory"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 

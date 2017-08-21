@@ -8,7 +8,7 @@ import (
 
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/liquidlabs-co/dex/storage/memory"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func signingKeyID(t *testing.T, s storage.Storage) string {

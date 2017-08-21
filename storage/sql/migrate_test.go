@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	sqlite3 "github.com/mattn/go-sqlite3"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func TestMigrate(t *testing.T) {

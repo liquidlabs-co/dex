@@ -12,7 +12,7 @@ import (
 
 	"github.com/kylelemons/godebug/pretty"
 	dsig "github.com/russellhaering/goxmldsig"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 
 	"github.com/liquidlabs-co/dex/connector"
 )

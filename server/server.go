@@ -16,7 +16,6 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
 
 	"github.com/liquidlabs-co/dex/connector"
 	"github.com/liquidlabs-co/dex/connector/github"
@@ -26,6 +25,7 @@ import (
 	"github.com/liquidlabs-co/dex/connector/oidc"
 	"github.com/liquidlabs-co/dex/connector/saml"
 	"github.com/liquidlabs-co/dex/storage"
+	"github.com/Sirupsen/logrus"
 )
 
 // LocalConnector is the local passwordDB connector which is an internal

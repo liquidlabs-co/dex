@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/cockroach-go/crdb"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 
 	// import third party drivers
 	_ "github.com/go-sql-driver/mysql"

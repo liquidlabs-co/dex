@@ -9,7 +9,7 @@ import (
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/lib/pq"
 	sqlite3 "github.com/mattn/go-sqlite3"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/liquidlabs-co/dex/storage"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // New returns an in memory storage.

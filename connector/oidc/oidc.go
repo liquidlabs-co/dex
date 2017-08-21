@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	"github.com/coreos/go-oidc"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	"golang.org/x/oauth2"
 
 	"github.com/liquidlabs-co/dex/connector"

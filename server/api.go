@@ -14,7 +14,7 @@ import (
 	"github.com/liquidlabs-co/dex/server/internal"
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/liquidlabs-co/dex/version"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // apiVersion increases every time a new call is added to the API. Clients should use this info

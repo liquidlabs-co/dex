@@ -9,7 +9,7 @@ import (
 
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/liquidlabs-co/dex/storage/conformance"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func withTimeout(t time.Duration, f func()) {

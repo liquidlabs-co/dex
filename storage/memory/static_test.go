@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/liquidlabs-co/dex/storage"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func TestStaticClients(t *testing.T) {
