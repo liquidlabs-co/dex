@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/liquidlabs-co/dex/storage/conformance"
+	"github.com/sirupsen/logrus"
 )
 
 const testKubeConfigEnv = "DEX_KUBECONFIG"

@@ -14,9 +14,9 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
 	"github.com/liquidlabs-co/dex/connector"
 	"github.com/liquidlabs-co/dex/connector/github"
@@ -288,9 +288,25 @@ func (db passwordDB) Login(ctx context.Context, s connector.Scopes, email, passw
 		}
 		return connector.Identity{}, false, nil
 	}
-	if err := bcrypt.CompareHashAndPassword(p.Hash, []byte(password)); err != nil {
-		return connector.Identity{}, false, nil
+
+	// Return an error if password-hash comparison takes longer than 10 seconds
+	errCh := make(chan error, 1)
+	go func() {
+		errCh <- bcrypt.CompareHashAndPassword(p.Hash, []byte(password))
+	}()
+	select {
+	case err = <-errCh:
+		if err != nil {
+			return connector.Identity{}, false, nil
+		}
+	case <-time.After(time.Second * 10):
+		var cost int
+		if cost, err = bcrypt.Cost(p.Hash); err == nil {
+			err = fmt.Errorf("password-hash comparison timeout: your bcrypt cost = %d, recommended cost = %d", cost, recCost)
+		}
+		return connector.Identity{}, false, err
 	}
+
 	return connector.Identity{
 		UserID:        p.UserID,
 		Username:      p.Username,

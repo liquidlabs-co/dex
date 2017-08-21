@@ -10,16 +10,19 @@ import (
 	// https://github.com/grpc/grpc-go/issues/711
 	"golang.org/x/net/context"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/liquidlabs-co/dex/api"
 	"github.com/liquidlabs-co/dex/server/internal"
 	"github.com/liquidlabs-co/dex/storage"
 	"github.com/liquidlabs-co/dex/version"
+	"github.com/sirupsen/logrus"
 )
 
 // apiVersion increases every time a new call is added to the API. Clients should use this info
 // to determine if the server supports specific features.
 const apiVersion = 2
+
+// recCost is the recommended bcrypt cost, which balances hash strength and time
+const recCost = 12
 
 // NewAPI returns a server which implements the gRPC API interface.
 func NewAPI(s storage.Storage, logger logrus.FieldLogger) api.DexServer {
@@ -80,16 +83,16 @@ func (d dexAPI) DeleteClient(ctx context.Context, req *api.DeleteClientReq) (*ap
 	return &api.DeleteClientResp{}, nil
 }
 
-// checkCost returns an error if the hash provided does not meet minimum cost requirement
-func checkCost(hash []byte) error {
+// checkCost returns an error if the hash provided does not meet minimum cost requirement, and the actual bcrypt cost
+func checkCost(hash []byte) (int, error) {
 	actual, err := bcrypt.Cost(hash)
 	if err != nil {
-		return fmt.Errorf("parsing bcrypt hash: %v", err)
+		return 0, fmt.Errorf("parsing bcrypt hash: %v", err)
 	}
 	if actual < bcrypt.DefaultCost {
-		return fmt.Errorf("given hash cost = %d, does not meet minimum cost requirement = %d", actual, bcrypt.DefaultCost)
+		return actual, fmt.Errorf("given hash cost = %d, does not meet minimum cost requirement = %d", actual, bcrypt.DefaultCost)
 	}
-	return nil
+	return actual, nil
 }
 
 func (d dexAPI) CreatePassword(ctx context.Context, req *api.CreatePasswordReq) (*api.CreatePasswordResp, error) {
@@ -100,8 +103,12 @@ func (d dexAPI) CreatePassword(ctx context.Context, req *api.CreatePasswordReq) 
 		return nil, errors.New("no user ID supplied")
 	}
 	if req.Password.Hash != nil {
-		if err := checkCost(req.Password.Hash); err != nil {
+		cost, err := checkCost(req.Password.Hash)
+		if err != nil {
 			return nil, err
+		}
+		if cost > recCost {
+			d.logger.Warnln("bcrypt cost = %d, password encryption might timeout. Recommended bcrypt cost is 12", cost)
 		}
 	} else {
 		return nil, errors.New("no hash of password supplied")
@@ -133,8 +140,12 @@ func (d dexAPI) UpdatePassword(ctx context.Context, req *api.UpdatePasswordReq) 
 	}
 
 	if req.NewHash != nil {
-		if err := checkCost(req.NewHash); err != nil {
+		cost, err := checkCost(req.NewHash)
+		if err != nil {
 			return nil, err
+		}
+		if cost > recCost {
+			d.logger.Warnln("bcrypt cost = %d, password encryption might timeout. Recommended bcrypt cost is 12", cost)
 		}
 	}
 
