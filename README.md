@@ -51,6 +51,14 @@ Dex's main production use is as an auth-N addon in CoreOS's enterprise Kubernete
 
 More docs for running dex as a Kubernetes authenticator can be found [here](Documentation/kubernetes.md).
 
+## Setup
+
+```
+make docker-image-example-app
+docker tag quay.io/coreos/dex-example-app:71153dd41ea2403452391d200dc0f0b476325d1a-dirty 569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
+docker push  569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
+```
+
 ## Documentation
 
 * [Getting started](Documentation/getting-started.md)
