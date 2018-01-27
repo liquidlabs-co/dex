@@ -17,19 +17,19 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 
-	"github.com/liquidlabs-co/dex/connector"
-	"github.com/liquidlabs-co/dex/connector/authproxy"
-	"github.com/liquidlabs-co/dex/connector/github"
-	"github.com/liquidlabs-co/dex/connector/gitlab"
-	"github.com/liquidlabs-co/dex/connector/ldap"
-	"github.com/liquidlabs-co/dex/connector/linkedin"
-	"github.com/liquidlabs-co/dex/connector/microsoft"
-	"github.com/liquidlabs-co/dex/connector/mock"
-	"github.com/liquidlabs-co/dex/connector/oidc"
-	"github.com/liquidlabs-co/dex/connector/saml"
-	"github.com/liquidlabs-co/dex/storage"
+	"github.com/coreos/dex/connector"
+	"github.com/coreos/dex/connector/authproxy"
+	"github.com/coreos/dex/connector/github"
+	"github.com/coreos/dex/connector/gitlab"
+	"github.com/coreos/dex/connector/ldap"
+	"github.com/coreos/dex/connector/linkedin"
+	"github.com/coreos/dex/connector/microsoft"
+	"github.com/coreos/dex/connector/mock"
+	"github.com/coreos/dex/connector/oidc"
+	"github.com/coreos/dex/connector/saml"
+	"github.com/coreos/dex/storage"
 )
 
 // LocalConnector is the local passwordDB connector which is an internal

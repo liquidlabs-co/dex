@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/conformance"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/conformance"
 	"github.com/Sirupsen/logrus"
 )
 

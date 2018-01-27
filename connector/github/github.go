@@ -20,7 +20,7 @@ import (
 	"golang.org/x/oauth2/github"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/liquidlabs-co/dex/connector"
+	"github.com/coreos/dex/connector"
 )
 
 const (

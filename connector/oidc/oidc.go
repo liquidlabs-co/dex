@@ -14,7 +14,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"golang.org/x/oauth2"
 
-	"github.com/liquidlabs-co/dex/connector"
+	"github.com/coreos/dex/connector"
 )
 
 // Config holds configuration options for OpenID Connect logins.
@@ -41,7 +41,7 @@ type Config struct {
 // Domains that don't support basic auth. golang.org/x/oauth2 has an internal
 // list, but it only matches specific URLs, not top level domains.
 var brokenAuthHeaderDomains = []string{
-	// See: https://github.com/liquidlabs-co/dex/issues/859
+	// See: https://github.com/coreos/dex/issues/859
 	"okta.com",
 	"oktapreview.com",
 }

@@ -1,8 +1,8 @@
 # dex - A federated OpenID Connect provider
 
-[![Travis](https://api.travis-ci.org/liquidlabs-co/dex.svg)](https://travis-ci.org/liquidlabs-co/dex)
-[![GoDoc](https://godoc.org/github.com/liquidlabs-co/dex?status.svg)](https://godoc.org/github.com/liquidlabs-co/dex)
-[![Go Report Card](https://goreportcard.com/badge/github.com/liquidlabs-co/dex)](https://goreportcard.com/report/github.com/liquidlabs-co/dex)
+[![Travis](https://api.travis-ci.org/coreos/dex.svg)](https://travis-ci.org/coreos/dex)
+[![GoDoc](https://godoc.org/github.com/coreos/dex?status.svg)](https://godoc.org/github.com/coreos/dex)
+[![Go Report Card](https://goreportcard.com/badge/github.com/coreos/dex)](https://goreportcard.com/report/github.com/coreos/dex)
 
 ![logo](Documentation/logos/dex-horizontal-color.png)
 
@@ -99,7 +99,7 @@ Due to their public nature, GitHub and mailing lists are NOT appropriate places 
 [tectonic]: https://tectonic.com/
 [tectonic-console]: https://tectonic.com/enterprise/docs/latest/usage/index.html#tectonic-console
 [go-oidc]: https://github.com/coreos/go-oidc
-[issues]: https://github.com/liquidlabs-co/dex/issues
+[issues]: https://github.com/coreos/dex/issues
 [dex-dev]: https://groups.google.com/forum/#!forum/dex-dev
-[milestones]: https://github.com/liquidlabs-co/dex/milestones
+[milestones]: https://github.com/coreos/dex/milestones
 [disclosure]: https://coreos.com/security/disclosure/

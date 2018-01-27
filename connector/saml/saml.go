@@ -17,7 +17,7 @@ import (
 	"github.com/russellhaering/goxmldsig/etreeutils"
 	"github.com/Sirupsen/logrus"
 
-	"github.com/liquidlabs-co/dex/connector"
+	"github.com/coreos/dex/connector"
 )
 
 const (

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // Tests for this code are in the "memory" package, since this package doesn't

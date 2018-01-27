@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liquidlabs-co/dex/api"
-	"github.com/liquidlabs-co/dex/server/internal"
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/memory"
+	"github.com/coreos/dex/api"
+	"github.com/coreos/dex/server/internal"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/memory"
 	"github.com/Sirupsen/logrus"
 	"google.golang.org/grpc"
 )

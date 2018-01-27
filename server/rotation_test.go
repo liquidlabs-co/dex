@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/memory"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/memory"
 	"github.com/Sirupsen/logrus"
 )
 

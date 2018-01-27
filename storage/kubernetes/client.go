@@ -27,8 +27,8 @@ import (
 	"github.com/Sirupsen/logrus"
 	"golang.org/x/net/http2"
 
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/kubernetes/k8sapi"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/kubernetes/k8sapi"
 )
 
 type client struct {

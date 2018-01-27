@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/liquidlabs-co/dex/storage"
+	"github.com/coreos/dex/storage"
 )
 
 // TODO(ericchiang): The update, insert, and select methods queries are all

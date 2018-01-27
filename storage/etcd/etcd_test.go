@@ -12,7 +12,7 @@ import (
 	"github.com/coreos/dex/storage"
 	"github.com/coreos/dex/storage/conformance"
 	"github.com/coreos/etcd/clientv3"
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func withTimeout(t time.Duration, f func()) {
