@@ -75,6 +75,9 @@ docker push  569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
   * [GitLab](Documentation/gitlab-connector.md)
   * [SAML 2.0](Documentation/saml-connector.md)
   * [OpenID Connect](Documentation/oidc-connector.md) (includes Google, Salesforce, Azure, etc.)
+  * [authproxy](Documentation/authproxy.md) (Apache2 mod_auth, etc.)
+  * [LinkedIn](Documentation/linkedin-connector.md)
+  * [Microsoft](Documentation/microsoft-connection.md)
 * Client libraries
   * [Go][go-oidc]
 
@@ -86,7 +89,6 @@ Due to their public nature, GitHub and mailing lists are NOT appropriate places 
 
 * For feature requests and bugs, file an [issue][issues].
 * For general discussion about both using and developing dex, join the [dex-dev][dex-dev] mailing list.
-* For more details on dex development plans, check out the GitHub [milestones][milestones].
 
 [openid-connect]: https://openid.net/connect/
 [standard-claims]: https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims

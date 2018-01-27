@@ -812,13 +812,134 @@ func TestCrossClientScopes(t *testing.T) {
 	}
 }
 
+func TestCrossClientScopesWithAzpInAudienceByDefault(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	httpServer, s := newTestServer(ctx, t, func(c *Config) {
+		c.Issuer = c.Issuer + "/non-root-path"
+	})
+	defer httpServer.Close()
+
+	p, err := oidc.NewProvider(ctx, httpServer.URL)
+	if err != nil {
+		t.Fatalf("failed to get provider: %v", err)
+	}
+
+	var (
+		reqDump, respDump []byte
+		gotCode           bool
+		state             = "a_state"
+	)
+	defer func() {
+		if !gotCode {
+			t.Errorf("never got a code in callback\n%s\n%s", reqDump, respDump)
+		}
+	}()
+
+	testClientID := "testclient"
+	peerID := "peer"
+
+	var oauth2Config *oauth2.Config
+	oauth2Server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/callback" {
+			q := r.URL.Query()
+			if errType := q.Get("error"); errType != "" {
+				if desc := q.Get("error_description"); desc != "" {
+					t.Errorf("got error from server %s: %s", errType, desc)
+				} else {
+					t.Errorf("got error from server %s", errType)
+				}
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+
+			if code := q.Get("code"); code != "" {
+				gotCode = true
+				token, err := oauth2Config.Exchange(ctx, code)
+				if err != nil {
+					t.Errorf("failed to exchange code for token: %v", err)
+					return
+				}
+				rawIDToken, ok := token.Extra("id_token").(string)
+				if !ok {
+					t.Errorf("no id token found: %v", err)
+					return
+				}
+				idToken, err := p.Verifier(&oidc.Config{ClientID: testClientID}).Verify(ctx, rawIDToken)
+				if err != nil {
+					t.Errorf("failed to parse ID Token: %v", err)
+					return
+				}
+
+				sort.Strings(idToken.Audience)
+				expAudience := []string{peerID, testClientID}
+				if !reflect.DeepEqual(idToken.Audience, expAudience) {
+					t.Errorf("expected audience %q, got %q", expAudience, idToken.Audience)
+				}
+
+			}
+			if gotState := q.Get("state"); gotState != state {
+				t.Errorf("state did not match, want=%q got=%q", state, gotState)
+			}
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		http.Redirect(w, r, oauth2Config.AuthCodeURL(state), http.StatusSeeOther)
+	}))
+
+	defer oauth2Server.Close()
+
+	redirectURL := oauth2Server.URL + "/callback"
+	client := storage.Client{
+		ID:           testClientID,
+		Secret:       "testclientsecret",
+		RedirectURIs: []string{redirectURL},
+	}
+	if err := s.storage.CreateClient(client); err != nil {
+		t.Fatalf("failed to create client: %v", err)
+	}
+
+	peer := storage.Client{
+		ID:           peerID,
+		Secret:       "foobar",
+		TrustedPeers: []string{"testclient"},
+	}
+
+	if err := s.storage.CreateClient(peer); err != nil {
+		t.Fatalf("failed to create client: %v", err)
+	}
+
+	oauth2Config = &oauth2.Config{
+		ClientID:     client.ID,
+		ClientSecret: client.Secret,
+		Endpoint:     p.Endpoint(),
+		Scopes: []string{
+			oidc.ScopeOpenID, "profile", "email",
+			"audience:server:client_id:" + peer.ID,
+		},
+		RedirectURL: redirectURL,
+	}
+
+	resp, err := http.Get(oauth2Server.URL + "/login")
+	if err != nil {
+		t.Fatalf("get failed: %v", err)
+	}
+	if reqDump, err = httputil.DumpRequest(resp.Request, false); err != nil {
+		t.Fatal(err)
+	}
+	if respDump, err = httputil.DumpResponse(resp, true); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestPasswordDB(t *testing.T) {
 	s := memory.New(logger)
 	conn := newPasswordDB(s)
 
 	pw := "hi"
 
-	h, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.MinCost)
+	h, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.DefaultCost)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -896,114 +1017,14 @@ func TestPasswordDB(t *testing.T) {
 
 }
 
-// A warning message should be logged if password-hash comparison takes longer than 10s
-func TestLoginTimeout(t *testing.T) {
+func TestPasswordDBUsernamePrompt(t *testing.T) {
 	s := memory.New(logger)
 	conn := newPasswordDB(s)
 
-	pw := "test1"
-
-	tests := []struct {
-		name, email, password string
-		pwHash                []byte
-		wantIdentity          connector.Identity
-		wantInvalid           bool
-		wantedErr             string
-	}{
-		{
-			name:     "valid password min cost",
-			email:    "jane@example.com",
-			password: pw,
-			// bcrypt hash of the value "test1" with cost 4
-			pwHash: []byte("$2a$04$lGqOe5gnlpsfreQ1OJHxGOO7f5FyyESyICkswSFATM1cnBVgCyyuG"),
-			wantIdentity: connector.Identity{
-				Email:         "jane@example.com",
-				Username:      "jane",
-				UserID:        "foobar",
-				EmailVerified: true,
-			},
-		},
-		{
-			name:     "valid password reccomended cost",
-			email:    "jane@example.com",
-			password: pw,
-			// bcrypt hash of the value "test1" with cost 12
-			pwHash: []byte("$2a$12$VZNNjuCUGX2NG5S1ci.3Ku9mI9DmA9XeXyrr7YzJuyTxuVBGdRAbm"),
-			wantIdentity: connector.Identity{
-				Email:         "jane@example.com",
-				Username:      "jane",
-				UserID:        "foobar",
-				EmailVerified: true,
-			},
-		},
-		{
-			name:     "valid password timeout cost",
-			email:    "jane@example.com",
-			password: pw,
-			// bcrypt hash of the value "test1" with cost 20
-			pwHash:    []byte("$2a$20$yODn5quqK9MZdePqYLs6Y.Jr4cOO1P0aXsKz0eTa2rxOmu8e7ETpi"),
-			wantedErr: fmt.Sprintf("password-hash comparison timeout: your bcrypt cost = 20, recommended cost = %d", recCost),
-		},
-		{
-			name:     "invalid password min cost",
-			email:    "jane@example.com",
-			password: pw,
-			// bcrypt hash of the value "test2" with cost 4
-			pwHash:      []byte("$2a$04$pX8wwwpxw8xlXrToYaEgZemK0JIibMZYXPsgau7aPDoGyHPF73br."),
-			wantInvalid: true,
-		},
-		{
-			name:     "invalid password timeout cost",
-			email:    "jane@example.com",
-			password: pw,
-			// bcrypt hash of the value "test2" with cost 20
-			pwHash:    []byte("$2a$20$WBD9cs63Zf0zqS99yyrQhODoDXphWw8MlYqVYRiftJH.lRJ1stnAa"),
-			wantedErr: fmt.Sprintf("password-hash comparison timeout: your bcrypt cost = 20, recommended cost = %d", recCost),
-		},
+	expected := "Email Address"
+	if actual := conn.Prompt(); actual != expected {
+		t.Errorf("expected %v, got %v", expected, actual)
 	}
-
-	sEmail, sUsername, sUserID := "jane@example.com", "jane", "foobar"
-	for _, tc := range tests {
-		// Clean up before new test case
-		s.DeletePassword(sEmail)
-
-		s.CreatePassword(storage.Password{
-			Email:    sEmail,
-			Username: sUsername,
-			UserID:   sUserID,
-			Hash:     tc.pwHash,
-		})
-
-		ident, valid, err := conn.Login(context.Background(), connector.Scopes{}, tc.email, tc.password)
-		if err != nil {
-			if err.Error() != tc.wantedErr {
-				t.Errorf("%s: error was incorrect:\n%v", tc.name, err)
-			}
-			continue
-		}
-
-		if tc.wantedErr != "" {
-			t.Errorf("%s: expected error", tc.name)
-			continue
-		}
-
-		if !valid {
-			if !tc.wantInvalid {
-				t.Errorf("%s: expected valid response", tc.name)
-			}
-			continue
-		}
-
-		if tc.wantInvalid {
-			t.Errorf("%s: expected invalid response", tc.name)
-			continue
-		}
-
-		if diff := pretty.Compare(tc.wantIdentity, ident); diff != "" {
-			t.Errorf("%s: %s", tc.email, diff)
-		}
-	}
-
 }
 
 type storageWithKeysTrigger struct {

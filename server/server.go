@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -16,16 +17,19 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 
 	"github.com/liquidlabs-co/dex/connector"
+	"github.com/liquidlabs-co/dex/connector/authproxy"
 	"github.com/liquidlabs-co/dex/connector/github"
 	"github.com/liquidlabs-co/dex/connector/gitlab"
 	"github.com/liquidlabs-co/dex/connector/ldap"
+	"github.com/liquidlabs-co/dex/connector/linkedin"
+	"github.com/liquidlabs-co/dex/connector/microsoft"
 	"github.com/liquidlabs-co/dex/connector/mock"
 	"github.com/liquidlabs-co/dex/connector/oidc"
 	"github.com/liquidlabs-co/dex/connector/saml"
 	"github.com/liquidlabs-co/dex/storage"
-	"github.com/Sirupsen/logrus"
 )
 
 // LocalConnector is the local passwordDB connector which is an internal
@@ -239,7 +243,19 @@ func newServer(ctx context.Context, c Config, rotationStrategy rotationStrategy)
 	handleWithCORS("/keys", s.handlePublicKeys)
 	handleFunc("/auth", s.handleAuthorization)
 	handleFunc("/auth/{connector}", s.handleConnectorLogin)
-	handleFunc("/callback", s.handleConnectorCallback)
+	r.HandleFunc(path.Join(issuerURL.Path, "/callback"), func(w http.ResponseWriter, r *http.Request) {
+		// Strip the X-Remote-* headers to prevent security issues on
+		// misconfigured authproxy connector setups.
+		for key := range r.Header {
+			if strings.HasPrefix(strings.ToLower(key), "x-remote-") {
+				r.Header.Del(key)
+			}
+		}
+		s.handleConnectorCallback(w, r)
+	})
+	// For easier connector-specific web server configuration, e.g. for the
+	// "authproxy" connector.
+	handleFunc("/callback/{connector}", s.handleConnectorCallback)
 	handleFunc("/approval", s.handleApproval)
 	handleFunc("/healthz", s.handleHealth)
 	handlePrefix("/static", static)
@@ -288,25 +304,14 @@ func (db passwordDB) Login(ctx context.Context, s connector.Scopes, email, passw
 		}
 		return connector.Identity{}, false, nil
 	}
-
-	// Return an error if password-hash comparison takes longer than 10 seconds
-	errCh := make(chan error, 1)
-	go func() {
-		errCh <- bcrypt.CompareHashAndPassword(p.Hash, []byte(password))
-	}()
-	select {
-	case err = <-errCh:
-		if err != nil {
-			return connector.Identity{}, false, nil
-		}
-	case <-time.After(time.Second * 10):
-		var cost int
-		if cost, err = bcrypt.Cost(p.Hash); err == nil {
-			err = fmt.Errorf("password-hash comparison timeout: your bcrypt cost = %d, recommended cost = %d", cost, recCost)
-		}
+	// This check prevents dex users from logging in using static passwords
+	// configured with hash costs that are too high or low.
+	if err := checkCost(p.Hash); err != nil {
 		return connector.Identity{}, false, err
 	}
-
+	if err := bcrypt.CompareHashAndPassword(p.Hash, []byte(password)); err != nil {
+		return connector.Identity{}, false, nil
+	}
 	return connector.Identity{
 		UserID:        p.UserID,
 		Username:      p.Username,
@@ -338,6 +343,10 @@ func (db passwordDB) Refresh(ctx context.Context, s connector.Scopes, identity c
 	identity.Username = p.Username
 
 	return identity, nil
+}
+
+func (db passwordDB) Prompt() string {
+	return "Email Address"
 }
 
 // newKeyCacher returns a storage which caches keys so long as the next
@@ -392,7 +401,7 @@ func (s *Server) startGarbageCollection(ctx context.Context, frequency time.Dura
 
 // ConnectorConfig is a configuration that can open a connector.
 type ConnectorConfig interface {
-	Open(logrus.FieldLogger) (connector.Connector, error)
+	Open(id string, logger logrus.FieldLogger) (connector.Connector, error)
 }
 
 // ConnectorsConfig variable provides an easy way to return a config struct
@@ -405,6 +414,9 @@ var ConnectorsConfig = map[string]func() ConnectorConfig{
 	"gitlab":       func() ConnectorConfig { return new(gitlab.Config) },
 	"oidc":         func() ConnectorConfig { return new(oidc.Config) },
 	"saml":         func() ConnectorConfig { return new(saml.Config) },
+	"authproxy":    func() ConnectorConfig { return new(authproxy.Config) },
+	"linkedin":     func() ConnectorConfig { return new(linkedin.Config) },
+	"microsoft":    func() ConnectorConfig { return new(microsoft.Config) },
 	// Keep around for backwards compatibility.
 	"samlExperimental": func() ConnectorConfig { return new(saml.Config) },
 }
@@ -426,7 +438,7 @@ func openConnector(logger logrus.FieldLogger, conn storage.Connector) (connector
 		}
 	}
 
-	c, err := connConfig.Open(logger)
+	c, err := connConfig.Open(conn.ID, logger)
 	if err != nil {
 		return c, fmt.Errorf("failed to create connector %s: %v", conn.ID, err)
 	}

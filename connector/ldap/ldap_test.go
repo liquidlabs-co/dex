@@ -28,6 +28,7 @@ const (
 	connectStartTLS connectionMethod = iota
 	connectLDAPS
 	connectLDAP
+	connectInsecureSkipVerify
 )
 
 // subtest is a login test against a given schema.
@@ -350,6 +351,49 @@ userpassword: foo
 	runTests(t, schema, connectStartTLS, c, tests)
 }
 
+func TestInsecureSkipVerify(t *testing.T) {
+	schema := `
+dn: dc=example,dc=org
+objectClass: dcObject
+objectClass: organization
+o: Example Company
+dc: example
+
+dn: ou=People,dc=example,dc=org
+objectClass: organizationalUnit
+ou: People
+
+dn: cn=jane,ou=People,dc=example,dc=org
+objectClass: person
+objectClass: inetOrgPerson
+sn: doe
+cn: jane
+mail: janedoe@example.com
+userpassword: foo
+`
+	c := &Config{}
+	c.UserSearch.BaseDN = "ou=People,dc=example,dc=org"
+	c.UserSearch.NameAttr = "cn"
+	c.UserSearch.EmailAttr = "mail"
+	c.UserSearch.IDAttr = "DN"
+	c.UserSearch.Username = "cn"
+
+	tests := []subtest{
+		{
+			name:     "validpassword",
+			username: "jane",
+			password: "foo",
+			want: connector.Identity{
+				UserID:        "cn=jane,ou=People,dc=example,dc=org",
+				Username:      "jane",
+				Email:         "janedoe@example.com",
+				EmailVerified: true,
+			},
+		},
+	}
+	runTests(t, schema, connectInsecureSkipVerify, c, tests)
+}
+
 func TestLDAPS(t *testing.T) {
 	schema := `
 dn: dc=example,dc=org
@@ -391,6 +435,31 @@ userpassword: foo
 		},
 	}
 	runTests(t, schema, connectLDAPS, c, tests)
+}
+
+func TestUsernamePrompt(t *testing.T) {
+	tests := map[string]struct {
+		config   Config
+		expected string
+	}{
+		"with usernamePrompt unset it returns \"\"": {
+			config:   Config{},
+			expected: "",
+		},
+		"with usernamePrompt set it returns that": {
+			config:   Config{UsernamePrompt: "Email address"},
+			expected: "Email address",
+		},
+	}
+
+	for n, d := range tests {
+		t.Run(n, func(t *testing.T) {
+			conn := &ldapConnector{Config: d.config}
+			if actual := conn.Prompt(); actual != d.expected {
+				t.Errorf("expected %v, got %v", d.expected, actual)
+			}
+		})
+	}
 }
 
 // runTests runs a set of tests against an LDAP schema. It does this by
@@ -531,6 +600,9 @@ func runTests(t *testing.T, schema string, connMethod connectionMethod, config *
 	case connectLDAPS:
 		c.Host = "localhost:10636"
 		c.RootCA = "testdata/ca.crt"
+	case connectInsecureSkipVerify:
+		c.Host = "localhost:10636"
+		c.InsecureSkipVerify = true
 	case connectLDAP:
 		c.Host = "localhost:10389"
 		c.InsecureNoSSL = true

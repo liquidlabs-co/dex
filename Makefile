@@ -11,8 +11,6 @@ DOCKER_IMAGE=$(DOCKER_REPO):$(VERSION)
 DOCKER_IMAGE_EXAMPLE_APP=$(DOCKER_REPO_EXAMPLE_APP):$(VERSION)
 
 $( shell mkdir -p bin )
-$( shell mkdir -p _output/images )
-$( shell mkdir -p _output/bin )
 
 user=$(shell id -u -n)
 group=$(shell id -g -n)
@@ -59,25 +57,15 @@ vet:
 	@go vet $(shell go list ./... | grep -v '/vendor/')
 
 fmt:
-	@go fmt $(shell go list ./... | grep -v '/vendor/')
+	@./scripts/gofmt $(shell go list ./... | grep -v '/vendor/')
 
 lint:
 	@for package in $(shell go list ./... | grep -v '/vendor/' | grep -v '/api' | grep -v '/server/internal'); do \
       golint -set_exit_status $$package $$i || exit 1; \
 	done
 
-_output/bin/dex:
-	@./scripts/docker-build
-	@sudo chown $(user):$(group) _output/bin/dex
-
-_output/bin/example-app:
-	@mkdir -p _output/static/
-	@cp -r cmd/example-app/static/ _output/static/
-	@./scripts/docker-build-example-app
-	@sudo chown $(user):$(group) _output/bin/example-app
-
 .PHONY: docker-image
-docker-image: clean-release _output/bin/dex
+docker-image:
 	@sudo docker build -t $(DOCKER_IMAGE) .
 	@sudo docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):latest
 
@@ -87,13 +75,13 @@ docker-image-example-app: clean-release _output/bin/example-app
 	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
 
 .PHONY: proto
-proto: api/api.pb.go server/internal/types.pb.go
-
-api/api.pb.go: api/api.proto bin/protoc bin/protoc-gen-go
+proto: bin/protoc bin/protoc-gen-go
 	@./bin/protoc --go_out=plugins=grpc:. --plugin=protoc-gen-go=./bin/protoc-gen-go api/*.proto
-
-server/internal/types.pb.go: server/internal/types.proto bin/protoc bin/protoc-gen-go
 	@./bin/protoc --go_out=. --plugin=protoc-gen-go=./bin/protoc-gen-go server/internal/*.proto
+
+.PHONY: verify-proto
+verify-proto: proto
+	@./scripts/git-diff
 
 bin/protoc: scripts/get-protoc
 	@./scripts/get-protoc bin/protoc
@@ -105,12 +93,8 @@ bin/protoc-gen-go:
 check-go-version:
 	@./scripts/check-go-version
 
-clean: clean-release
+clean:
 	@rm -rf bin/
-
-.PHONY: clean-release
-clean-release:
-	@rm -rf _output/
 
 testall: testrace vet fmt lint
 
