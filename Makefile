@@ -71,6 +71,8 @@ docker-image:
 
 .PHONY: docker-image-example-app
 docker-image-example-app:
+	mkdir -p _output/bin
+	cp bin/example-app _output/bin/
 	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
 	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
 
