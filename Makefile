@@ -70,7 +70,7 @@ docker-image:
 	@sudo docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):latest
 
 .PHONY: docker-image-example-app
-docker-image-example-app: clean-release _output/bin/example-app
+docker-image-example-app:
 	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
 	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
 
