@@ -1,20 +1,26 @@
-FROM alpine:3.4
+FROM golang:1.9.2-alpine
 
+RUN apk add --no-cache --update alpine-sdk
+
+COPY . /go/src/github.com/coreos/dex
+RUN cd /go/src/github.com/coreos/dex && make release-binary-example-app
+
+FROM alpine:3.4
 # Dex connectors, such as GitHub and Google logins require root certificates.
 # Proper installations should manage those certificates, but it's a bad user
 # experience when this doesn't work out of the box.
 #
 # OpenSSL is required so wget can query HTTPS endpoints for health checking.
-
 RUN apk add --update ca-certificates openssl
 
-COPY _output/bin/example-app /bin/example-app
+COPY --from=0 /go/bin/example-app /usr/local/bin/example-app
+
 RUN mkdir -p /static
 COPY _output/static/ /static
 
 WORKDIR /
 
-ENTRYPOINT ["./bin/example-app"]
+ENTRYPOINT ["example-app"]
 
 EXPOSE 5555
 
