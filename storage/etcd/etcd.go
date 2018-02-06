@@ -9,7 +9,7 @@ import (
 
 	"github.com/coreos/dex/storage"
 	"github.com/coreos/etcd/clientv3"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 const (

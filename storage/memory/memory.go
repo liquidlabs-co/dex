@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/coreos/dex/storage"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // New returns an in memory storage.

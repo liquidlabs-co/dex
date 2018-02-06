@@ -12,7 +12,7 @@ import (
 
 	"gopkg.in/ldap.v2"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/coreos/dex/connector"
 )
 

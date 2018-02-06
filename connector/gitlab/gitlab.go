@@ -12,7 +12,7 @@ import (
 	"strconv"
 
 	"github.com/coreos/dex/connector"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )
 

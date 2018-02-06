@@ -11,7 +11,7 @@ import (
 	"github.com/coreos/dex/server/internal"
 	"github.com/coreos/dex/storage"
 	"github.com/coreos/dex/storage/memory"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 

@@ -23,7 +23,7 @@ import (
 
 	oidc "github.com/coreos/go-oidc"
 	"github.com/kylelemons/godebug/pretty"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 	jose "gopkg.in/square/go-jose.v2"

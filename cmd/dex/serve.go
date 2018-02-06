@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/ghodss/yaml"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

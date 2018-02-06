@@ -14,7 +14,7 @@ import (
 	"github.com/coreos/dex/server/internal"
 	"github.com/coreos/dex/storage"
 	"github.com/coreos/dex/version"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // apiVersion increases every time a new call is added to the API. Clients should use this info
