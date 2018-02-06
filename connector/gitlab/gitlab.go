@@ -11,8 +11,8 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/liquidlabs-co/dex/connector"
-	"github.com/Sirupsen/logrus"
+	"github.com/coreos/dex/connector"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )
 
@@ -20,6 +20,11 @@ const (
 	// https://docs.gitlab.com/ee/integration/oauth_provider.html#authorized-applications
 	scopeUser = "read_user"
 	scopeAPI  = "api"
+)
+
+var (
+	reNext = regexp.MustCompile("<([^>]+)>; rel=\"next\"")
+	reLast = regexp.MustCompile("<([^>]+)>; rel=\"last\"")
 )
 
 // Config holds configuration options for gilab logins.
@@ -46,7 +51,7 @@ type gitlabGroup struct {
 }
 
 // Open returns a strategy for logging in through GitLab.
-func (c *Config) Open(logger logrus.FieldLogger) (connector.Connector, error) {
+func (c *Config) Open(id string, logger logrus.FieldLogger) (connector.Connector, error) {
 	if c.BaseURL == "" {
 		c.BaseURL = "https://www.gitlab.com"
 	}
@@ -236,9 +241,6 @@ func (c *gitlabConnector) groups(ctx context.Context, client *http.Client) ([]st
 
 	apiURL := c.baseURL + "/api/v4/groups"
 
-	reNext := regexp.MustCompile("<(.*)>; rel=\"next\"")
-	reLast := regexp.MustCompile("<(.*)>; rel=\"last\"")
-
 	groups := []string{}
 	var gitlabGroups []gitlabGroup
 	for {
@@ -272,22 +274,28 @@ func (c *gitlabConnector) groups(ctx context.Context, client *http.Client) ([]st
 
 		link := resp.Header.Get("Link")
 
-		if len(reLast.FindStringSubmatch(link)) > 1 {
-			lastPageURL := reLast.FindStringSubmatch(link)[1]
-
-			if apiURL == lastPageURL {
-				break
-			}
-		} else {
+		apiURL = nextURL(apiURL, link)
+		if apiURL == "" {
 			break
 		}
-
-		if len(reNext.FindStringSubmatch(link)) > 1 {
-			apiURL = reNext.FindStringSubmatch(link)[1]
-		} else {
-			break
-		}
-
 	}
 	return groups, nil
+}
+
+func nextURL(url string, link string) string {
+	if len(reLast.FindStringSubmatch(link)) > 1 {
+		lastPageURL := reLast.FindStringSubmatch(link)[1]
+
+		if url == lastPageURL {
+			return ""
+		}
+	} else {
+		return ""
+	}
+
+	if len(reNext.FindStringSubmatch(link)) > 1 {
+		return reNext.FindStringSubmatch(link)[1]
+	}
+
+	return ""
 }

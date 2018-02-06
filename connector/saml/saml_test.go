@@ -12,9 +12,9 @@ import (
 
 	"github.com/kylelemons/godebug/pretty"
 	dsig "github.com/russellhaering/goxmldsig"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
-	"github.com/liquidlabs-co/dex/connector"
+	"github.com/coreos/dex/connector"
 )
 
 // responseTest maps a SAML 2.0 response object to a set of expected values.

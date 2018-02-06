@@ -1,8 +1,8 @@
 # dex - A federated OpenID Connect provider
 
-[![Travis](https://api.travis-ci.org/liquidlabs-co/dex.svg)](https://travis-ci.org/liquidlabs-co/dex)
-[![GoDoc](https://godoc.org/github.com/liquidlabs-co/dex?status.svg)](https://godoc.org/github.com/liquidlabs-co/dex)
-[![Go Report Card](https://goreportcard.com/badge/github.com/liquidlabs-co/dex)](https://goreportcard.com/report/github.com/liquidlabs-co/dex)
+[![Travis](https://travis-ci.org/liquidlabs-co/dex.svg)](https://travis-ci.org/liquidlabs-co/dex)
+[![GoDoc](https://godoc.org/github.com/coreos/dex?status.svg)](https://godoc.org/github.com/coreos/dex)
+[![Go Report Card](https://goreportcard.com/badge/github.com/coreos/dex)](https://goreportcard.com/report/github.com/coreos/dex)
 
 ![logo](Documentation/logos/dex-horizontal-color.png)
 
@@ -75,6 +75,9 @@ docker push  569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
   * [GitLab](Documentation/gitlab-connector.md)
   * [SAML 2.0](Documentation/saml-connector.md)
   * [OpenID Connect](Documentation/oidc-connector.md) (includes Google, Salesforce, Azure, etc.)
+  * [authproxy](Documentation/authproxy.md) (Apache2 mod_auth, etc.)
+  * [LinkedIn](Documentation/linkedin-connector.md)
+  * [Microsoft](Documentation/microsoft-connection.md)
 * Client libraries
   * [Go][go-oidc]
 
@@ -86,7 +89,6 @@ Due to their public nature, GitHub and mailing lists are NOT appropriate places 
 
 * For feature requests and bugs, file an [issue][issues].
 * For general discussion about both using and developing dex, join the [dex-dev][dex-dev] mailing list.
-* For more details on dex development plans, check out the GitHub [milestones][milestones].
 
 [openid-connect]: https://openid.net/connect/
 [standard-claims]: https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
@@ -97,7 +99,7 @@ Due to their public nature, GitHub and mailing lists are NOT appropriate places 
 [tectonic]: https://tectonic.com/
 [tectonic-console]: https://tectonic.com/enterprise/docs/latest/usage/index.html#tectonic-console
 [go-oidc]: https://github.com/coreos/go-oidc
-[issues]: https://github.com/liquidlabs-co/dex/issues
+[issues]: https://github.com/coreos/dex/issues
 [dex-dev]: https://groups.google.com/forum/#!forum/dex-dev
-[milestones]: https://github.com/liquidlabs-co/dex/milestones
+[milestones]: https://github.com/coreos/dex/milestones
 [disclosure]: https://coreos.com/security/disclosure/

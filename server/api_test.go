@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liquidlabs-co/dex/api"
-	"github.com/liquidlabs-co/dex/server/internal"
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/memory"
-	"github.com/Sirupsen/logrus"
+	"github.com/coreos/dex/api"
+	"github.com/coreos/dex/server/internal"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/memory"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -132,16 +132,15 @@ func TestCheckCost(t *testing.T) {
 	defer client.Close()
 
 	tests := []struct {
-		name         string
-		inputHash    []byte
-		expectedCost int
-		wantErr      bool
+		name      string
+		inputHash []byte
+
+		wantErr bool
 	}{
 		{
 			name: "valid cost",
-			// bcrypt hash of the value "test1" with cost 12
-			inputHash:    []byte("$2a$12$M2Ot95Qty1MuQdubh1acWOiYadJDzeVg3ve4n5b.dgcgPdjCseKx2"),
-			expectedCost: recCost,
+			// bcrypt hash of the value "test1" with cost 12 (default)
+			inputHash: []byte("$2a$12$M2Ot95Qty1MuQdubh1acWOiYadJDzeVg3ve4n5b.dgcgPdjCseKx2"),
 		},
 		{
 			name:      "invalid hash",
@@ -156,15 +155,14 @@ func TestCheckCost(t *testing.T) {
 		},
 		{
 			name: "cost above recommendation",
-			// bcrypt hash of the value "test1" with cost 20
-			inputHash:    []byte("$2a$20$yODn5quqK9MZdePqYLs6Y.Jr4cOO1P0aXsKz0eTa2rxOmu8e7ETpi"),
-			expectedCost: 20,
+			// bcrypt hash of the value "test1" with cost 17
+			inputHash: []byte("$2a$17$tWuZkTxtSmRyWZAGWVHQE.7npdl.TgP8adjzLJD.SyjpFznKBftPe"),
+			wantErr:   true,
 		},
 	}
 
 	for _, tc := range tests {
-		cost, err := checkCost(tc.inputHash)
-		if err != nil {
+		if err := checkCost(tc.inputHash); err != nil {
 			if !tc.wantErr {
 				t.Errorf("%s: %s", tc.name, err)
 			}
@@ -174,10 +172,6 @@ func TestCheckCost(t *testing.T) {
 		if tc.wantErr {
 			t.Errorf("%s: expected err", tc.name)
 			continue
-		}
-
-		if cost != tc.expectedCost {
-			t.Errorf("%s: exepcted cost = %d but got cost = %d", tc.name, tc.expectedCost, cost)
 		}
 	}
 }
@@ -273,8 +267,22 @@ func TestRefreshToken(t *testing.T) {
 	}
 
 	resp, err := client.RevokeRefresh(ctx, &revokeReq)
-	if err != nil || resp.NotFound {
+	if err != nil {
 		t.Fatalf("Unable to revoke refresh tokens for user: %v", err)
+	}
+	if resp.NotFound {
+		t.Errorf("refresh token session wasn't found")
+	}
+
+	// Try to delete again.
+	//
+	// See https://github.com/coreos/dex/issues/1055
+	resp, err = client.RevokeRefresh(ctx, &revokeReq)
+	if err != nil {
+		t.Fatalf("Unable to revoke refresh tokens for user: %v", err)
+	}
+	if !resp.NotFound {
+		t.Errorf("refresh token session was found")
 	}
 
 	if resp, _ := client.ListRefresh(ctx, &listReq); len(resp.RefreshTokens) != 0 {

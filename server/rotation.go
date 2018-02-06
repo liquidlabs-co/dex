@@ -12,8 +12,8 @@ import (
 
 	"gopkg.in/square/go-jose.v2"
 
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/Sirupsen/logrus"
+	"github.com/coreos/dex/storage"
+	"github.com/sirupsen/logrus"
 )
 
 var errAlreadyRotated = errors.New("keys already rotated by another server instance")

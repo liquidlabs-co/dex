@@ -14,14 +14,14 @@ import (
 	"time"
 
 	"github.com/ghodss/yaml"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/liquidlabs-co/dex/api"
-	"github.com/liquidlabs-co/dex/server"
-	"github.com/liquidlabs-co/dex/storage"
+	"github.com/coreos/dex/api"
+	"github.com/coreos/dex/server"
+	"github.com/coreos/dex/storage"
 )
 
 func commandServe() *cobra.Command {
@@ -75,7 +75,7 @@ func serve(cmd *cobra.Command, args []string) error {
 	}{
 		{c.Issuer == "", "no issuer specified in config file"},
 		{!c.EnablePasswordDB && len(c.StaticPasswords) != 0, "cannot specify static passwords without enabling password db"},
-		{c.Storage.Config == nil, "no storage suppied in config file"},
+		{c.Storage.Config == nil, "no storage supplied in config file"},
 		{c.Web.HTTP == "" && c.Web.HTTPS == "", "must supply a HTTP/HTTPS  address to listen on"},
 		{c.Web.HTTPS != "" && c.Web.TLSCert == "", "no cert specified for HTTPS"},
 		{c.Web.HTTPS != "" && c.Web.TLSKey == "", "no private key specified for HTTPS"},
@@ -144,7 +144,7 @@ func serve(cmd *cobra.Command, args []string) error {
 		for i, p := range c.StaticPasswords {
 			passwords[i] = storage.Password(p)
 		}
-		s = storage.WithStaticPasswords(s, passwords)
+		s = storage.WithStaticPasswords(s, passwords, logger)
 	}
 
 	storageConnectors := make([]storage.Connector, len(c.StaticConnectors))

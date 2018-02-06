@@ -9,6 +9,30 @@ The connector executes two primary queries:
 1. Finding the user based on the end user's credentials.
 2. Searching for groups using the user entry.
 
+## Getting started
+
+The dex repo contains a basic LDAP setup using [OpenLDAP][openldap].
+
+First start the LDAP server using the example script. This will run the OpenLDAP daemon and seed it with a initial set of users.
+
+```
+./scripts/slapd.sh
+```
+
+This script sets the LDAP daemon to debug mode, and is expected to print several error messages which are normal. Once the server is up, run dex.
+
+```
+./bin/dex serve examples/config-ldap.yaml
+```
+
+Then run the OAuth client in another terminal.
+
+```
+./bin/example-app
+```
+
+Go to [http://localhost:5555](http://localhost:5555), login and enter the username and password of the LDAP user: `janedoe@example.com`/`foo`. Add the "groups" scope as part of the initial redirect to add group information from the LDAP server.
+
 ## Security considerations
 
 Dex attempts to bind with the backing LDAP server using the end user's _plain text password_. Though some LDAP implementations allow passing hashed passwords, dex doesn't support hashing and instead _strongly recommends that all administrators just use TLS_. This can often be achieved by using port 636 instead of 389, and administrators that choose 389 are actively leaking passwords.
@@ -65,6 +89,10 @@ connectors:
     # environment variable which should be given as the value to `bindPW`.
     bindDN: uid=seviceaccount,cn=users,dc=example,dc=com
     bindPW: password
+
+    # The attribute to display in the provided password prompt. If unset, will
+    # display "Username"
+    usernamePrompt: SSO Username
 
     # User search maps a username and password entered by a user to a LDAP entry.
     userSearch:
@@ -252,3 +280,5 @@ connectors:
 ```
 
 If the search finds an entry, it will attempt to use the provided password to bind as that user entry.
+
+[openldap]: https://www.openldap.org/

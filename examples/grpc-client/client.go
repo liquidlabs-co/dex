@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/liquidlabs-co/dex/api"
+	"github.com/coreos/dex/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )

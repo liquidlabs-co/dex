@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/conformance"
-	"github.com/Sirupsen/logrus"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/conformance"
+	"github.com/sirupsen/logrus"
 )
 
 func withTimeout(t time.Duration, f func()) {

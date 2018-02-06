@@ -6,14 +6,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/liquidlabs-co/dex/server"
-	"github.com/liquidlabs-co/dex/storage"
-	"github.com/liquidlabs-co/dex/storage/kubernetes"
-	"github.com/liquidlabs-co/dex/storage/memory"
-	"github.com/liquidlabs-co/dex/storage/sql"
+	"github.com/coreos/dex/server"
+	"github.com/coreos/dex/storage"
+	"github.com/coreos/dex/storage/etcd"
+	"github.com/coreos/dex/storage/kubernetes"
+	"github.com/coreos/dex/storage/memory"
+	"github.com/coreos/dex/storage/sql"
 )
 
 // Config is the config format for the main application.
@@ -124,6 +125,7 @@ type StorageConfig interface {
 }
 
 var storages = map[string]func() StorageConfig{
+	"etcd":       func() StorageConfig { return new(etcd.Etcd) },
 	"kubernetes": func() StorageConfig { return new(kubernetes.Config) },
 	"memory":     func() StorageConfig { return new(memory.Config) },
 	"sqlite3":    func() StorageConfig { return new(sql.SQLite3) },

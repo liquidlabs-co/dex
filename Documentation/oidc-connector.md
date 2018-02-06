@@ -52,5 +52,5 @@ connectors:
 ```
 
 [oidc-doc]: openid-connect.md
-[google-refreshing]: https://github.com/liquidlabs-co/dex/issues/863
+[google-refreshing]: https://github.com/coreos/dex/issues/863
 [azure-ad-v1]: https://github.com/coreos/go-oidc/issues/133

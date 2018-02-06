@@ -181,8 +181,7 @@ func cmd() *cobra.Command {
 			http.HandleFunc("/login", a.handleLogin)
 			http.HandleFunc(u.Path, a.handleCallback)
 
-
- 			switch listenURL.Scheme {
+			switch listenURL.Scheme {
 			case "http":
 				log.Printf("listening on %s", listen)
 				return http.ListenAndServe(listenURL.Host, nil)

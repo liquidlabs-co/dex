@@ -6,8 +6,8 @@ sudo docker build -f Dockerfile-base -t golang-updated .
 
 sudo docker run \
     --cidfile=cid \
-    -v $PWD:/go/src/github.com/liquidlabs-co/dex:ro \
-    -w /go/src/github.com/liquidlabs-co/dex \
+    -v $PWD:/go/src/github.com/coreos/dex:ro \
+    -w /go/src/github.com/coreos/dex \
     golang-updated \
     /bin/sh -x -c \
     'make release-binary'

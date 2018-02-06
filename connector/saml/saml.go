@@ -15,9 +15,9 @@ import (
 	"github.com/beevik/etree"
 	dsig "github.com/russellhaering/goxmldsig"
 	"github.com/russellhaering/goxmldsig/etreeutils"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
-	"github.com/liquidlabs-co/dex/connector"
+	"github.com/coreos/dex/connector"
 )
 
 const (
@@ -125,7 +125,7 @@ func (c certStore) Certificates() (roots []*x509.Certificate, err error) {
 
 // Open validates the config and returns a connector. It does not actually
 // validate connectivity with the provider.
-func (c *Config) Open(logger logrus.FieldLogger) (connector.Connector, error) {
+func (c *Config) Open(id string, logger logrus.FieldLogger) (connector.Connector, error) {
 	return c.openConnector(logger)
 }
 

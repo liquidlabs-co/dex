@@ -1,11 +1,10 @@
 package main
 
 import (
-    "html/template"
-    "log"
-    "net/http"
+	"html/template"
+	"log"
+	"net/http"
 )
-
 
 var indexTmpl = template.Must(template.New("index.html").Parse(`<html>
   <head>
@@ -25,14 +24,14 @@ var indexTmpl = template.Must(template.New("index.html").Parse(`<html>
 </html>`))
 
 func renderIndex(w http.ResponseWriter) {
-    renderTemplate(w, indexTmpl, nil)
+	renderTemplate(w, indexTmpl, nil)
 }
 
 type tokenTmplData struct {
-    IDToken      string
-    RefreshToken string
-    RedirectURL  string
-    Claims       string
+	IDToken      string
+	RefreshToken string
+	RedirectURL  string
+	Claims       string
 }
 
 var tokenTmpl = template.Must(template.New("token.html").Parse(`<html>
@@ -65,29 +64,29 @@ var tokenTmpl = template.Must(template.New("token.html").Parse(`<html>
 `))
 
 func renderToken(w http.ResponseWriter, redirectURL, idToken, refreshToken string, claims []byte) {
-    renderTemplate(w, tokenTmpl, tokenTmplData{
-        IDToken:      idToken,
-        RefreshToken: refreshToken,
-        RedirectURL:  redirectURL,
-        Claims:       string(claims),
-    })
+	renderTemplate(w, tokenTmpl, tokenTmplData{
+		IDToken:      idToken,
+		RefreshToken: refreshToken,
+		RedirectURL:  redirectURL,
+		Claims:       string(claims),
+	})
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl *template.Template, data interface{}) {
-    err := tmpl.Execute(w, data)
-    if err == nil {
-        return
-    }
+	err := tmpl.Execute(w, data)
+	if err == nil {
+		return
+	}
 
-    switch err := err.(type) {
-    case *template.Error:
-        // An ExecError guarantees that Execute has not written to the underlying reader.
-        log.Printf("Error rendering template %s: %s", tmpl.Name(), err)
+	switch err := err.(type) {
+	case *template.Error:
+		// An ExecError guarantees that Execute has not written to the underlying reader.
+		log.Printf("Error rendering template %s: %s", tmpl.Name(), err)
 
-        // TODO(ericchiang): replace with better internal server error.
-        http.Error(w, "Internal server error", http.StatusInternalServerError)
-    default:
-        // An error with the underlying write, such as the connection being
-        // dropped. Ignore for now.
-    }
+		// TODO(ericchiang): replace with better internal server error.
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	default:
+		// An error with the underlying write, such as the connection being
+		// dropped. Ignore for now.
+	}
 }
