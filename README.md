@@ -1,6 +1,6 @@
 # dex - A federated OpenID Connect provider
 
-[![Travis](https://api.travis-ci.org/coreos/dex.svg)](https://travis-ci.org/coreos/dex)
+[![Travis](https://travis-ci.org/liquidlabs-co/dex.svg)](https://travis-ci.org/liquidlabs-co/dex)
 [![GoDoc](https://godoc.org/github.com/coreos/dex?status.svg)](https://godoc.org/github.com/coreos/dex)
 [![Go Report Card](https://goreportcard.com/badge/github.com/coreos/dex)](https://goreportcard.com/report/github.com/coreos/dex)
 
