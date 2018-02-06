@@ -19,6 +19,7 @@ COPY --from=0 /go/bin/dex /usr/local/bin/dex
 # are in the default path.
 COPY web /web
 WORKDIR /
+COPY config.yaml /
 
 EXPOSE 5556
 
