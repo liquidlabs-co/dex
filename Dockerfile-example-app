@@ -23,5 +23,3 @@ WORKDIR /
 ENTRYPOINT ["example-app"]
 
 EXPOSE 5555
-
-CMD ["version"]
