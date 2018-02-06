@@ -30,7 +30,7 @@ docker run \
     --cidfile=$TEMPDIR/etcd \
     -d \
     --net=host \
-    k8s.gcr.io/etcd-amd64:3.1.10 \
+    k8s.gcr.io/etcd:3.1.10 \
     etcd
 
 docker run \
