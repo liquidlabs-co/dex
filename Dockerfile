@@ -20,6 +20,8 @@ COPY --from=0 /go/bin/dex /usr/local/bin/dex
 COPY web /web
 WORKDIR /
 
+EXPOSE 5556
+
 ENTRYPOINT ["dex"]
 
 CMD ["version"]
