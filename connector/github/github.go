@@ -19,8 +19,8 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 
-	"github.com/sirupsen/logrus"
 	"github.com/coreos/dex/connector"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -242,13 +242,7 @@ func (c *githubConnector) HandleCallback(s connector.Scopes, r *http.Request) (i
 		return identity, fmt.Errorf("github: get user: %v", err)
 	}
 
-	/*
-	username := user.Name
-	if username == "" {
-		username = user.Login
-	}
-	*/
-	var username string = user.Login
+	var username = user.Login
 
 	identity = connector.Identity{
 		UserID:        strconv.Itoa(user.ID),
@@ -294,13 +288,7 @@ func (c *githubConnector) Refresh(ctx context.Context, s connector.Scopes, ident
 		return identity, fmt.Errorf("github: get user: %v", err)
 	}
 
-	/*
-	username := user.Name
-	if username == "" {
-		username = user.Login
-	}
-	*/
-	var username string = user.Login
+	var username = user.Login
 
 	identity.Username = username
 	identity.Email = user.Email
