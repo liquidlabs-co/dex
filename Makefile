@@ -3,6 +3,7 @@ ORG_PATH=github.com/coreos
 REPO_PATH=$(ORG_PATH)/$(PROJ)
 export PATH := $(PWD)/bin:$(PATH)
 
+TAG ?="latest"
 VERSION ?= $(shell ./scripts/git-version)
 
 DOCKER_REPO=569325332953.dkr.ecr.us-east-1.amazonaws.com/dex
@@ -67,7 +68,7 @@ lint:
 .PHONY: docker-image
 docker-image:
 	@sudo docker build -t $(DOCKER_IMAGE) .
-	@sudo docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):latest
+	@sudo docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):$(TAG)
 
 .PHONY: docker-image-example-app
 docker-image-example-app:
@@ -76,7 +77,7 @@ docker-image-example-app:
 	cp bin/example-app _output/bin/
 	cp -r static _output/
 	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
-	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):latest
+	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):$(TAG)
 
 .PHONY: proto
 proto: bin/protoc bin/protoc-gen-go
