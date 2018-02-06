@@ -111,7 +111,7 @@ import:
 
 # etcd driver
 - package: github.com/coreos/etcd
-  version: v3.2.9
+  version: v3.3.0
   subpackages:
   - clientv3
 

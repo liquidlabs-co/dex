@@ -19,8 +19,7 @@ install:
   - go get -u github.com/golang/lint/golint
   - sudo -E apt-get install -y --force-yes slapd time ldap-utils
   - sudo /etc/init.d/slapd stop
-  - docker run -d --net=host gcr.io/etcd-development/etcd:v3.2.9
-
+  - docker run -d --net=host gcr.io/etcd-development/etcd:v3.3.0
 
 script:
   - make testall

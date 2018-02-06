@@ -30,7 +30,7 @@ docker run \
     --cidfile=$TEMPDIR/etcd \
     -d \
     --net=host \
-    k8s.gcr.io/etcd:3.1.10 \
+    gcr.io/etcd-development/etcd:v3.3.0 \
     etcd
 
 docker run \
@@ -38,7 +38,7 @@ docker run \
     -d \
     -v $TEMPDIR:/var/run/kube-test:ro \
     --net=host \
-    gcr.io/google_containers/kube-apiserver-amd64:v1.7.4 \
+    gcr.io/google_containers/kube-apiserver-amd64:v1.8.6 \
     kube-apiserver \
     --etcd-servers=http://localhost:2379 \
     --service-cluster-ip-range=10.0.0.1/16 \
