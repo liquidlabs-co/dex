@@ -1,0 +1,23 @@
+version: '2.2'
+services:
+  dex-signin:
+    build:
+      context: .
+      dockerfile: Dockerfile-example-app
+    working_dir: /
+    ports:
+      - "5555:5555"
+    depends_on:
+      - dex
+    command: [
+      "/scripts/wait-for-it.sh", "dex:5556", "-s", "-t", "60", "--",
+      "example-app", "--issuer", "http://dex:5556/dex", "--listen", "http://0.0.0.0:5555"
+    ]
+  dex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /
+    ports:
+      - "5556:5556"
+    command: ["dex", "serve", "config-dev.yaml"]

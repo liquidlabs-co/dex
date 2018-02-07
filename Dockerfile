@@ -18,11 +18,13 @@ COPY --from=0 /go/bin/dex /usr/local/bin/dex
 # Import frontend assets and set the correct CWD directory so the assets
 # are in the default path.
 COPY web /web
+COPY web/themes/gigster/* /theme/
+COPY config-dev.yaml /config-dev.yaml
+
+RUN mkdir -p /db
+
 WORKDIR /
-COPY config.yaml /
 
 EXPOSE 5556
 
-ENTRYPOINT ["dex"]
-
-CMD ["version"]
+CMD ["dex"]
