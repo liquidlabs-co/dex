@@ -71,13 +71,17 @@ docker-image:
 	@sudo docker tag $(DOCKER_IMAGE) $(DOCKER_REPO):$(TAG)
 
 .PHONY: docker-image-example-app
-docker-image-example-app:
-	rm -rf _output/
+docker-image-example-app: generate-example-app-output
+	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
+	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):$(TAG)
+
+.PHONY: generate-example-app-output
+generate-example-app-output:
+	rm -rf _output/bin
+	rm -rf _output/**/*.css
 	mkdir -p _output/bin
 	cp bin/example-app _output/bin/
 	cp -r static _output/
-	@sudo docker build -f Dockerfile-example-app -t $(DOCKER_IMAGE_EXAMPLE_APP) .
-	@sudo docker tag $(DOCKER_IMAGE_EXAMPLE_APP) $(DOCKER_REPO_EXAMPLE_APP):$(TAG)
 
 .PHONY: proto
 proto: bin/protoc bin/protoc-gen-go
