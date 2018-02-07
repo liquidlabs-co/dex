@@ -1,7 +1,7 @@
 # The base path of dex and the external name of the OpenID Connect service.
 # This is the canonical URL that all clients MUST use to refer to dex. If a
 # path is provided, dex's HTTP service will listen at a non-root URL.
-issuer: http://127.0.0.1:5556/dex
+issuer: http://dex:5556/dex
 
 # The storage configuration determines where dex stores its state. Supported
 # options include SQL flavors and Kubernetes third party resources.
@@ -10,7 +10,7 @@ issuer: http://127.0.0.1:5556/dex
 storage:
   type: sqlite3
   config:
-    file: examples/dex.db
+    file: /db/dex.db
 
 # Configuration for the HTTP endpoints.
 web:
@@ -44,7 +44,8 @@ web:
 staticClients:
 - id: example-app
   redirectURIs:
-  - 'http://127.0.0.1:5555/callback'
+    - 'http://dex-signin:5555/callback'
+    - 'http://127.0.0.1:5555/callback'
   name: 'Example App'
   secret: ZXhhbXBsZS1hcHAtc2VjcmV0
 
