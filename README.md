@@ -10,6 +10,24 @@ Dex is an identity service that uses [OpenID Connect][openid-connect] to drive a
 
 Dex is NOT a user-management system, but acts as a portal to other identity providers through "connectors." This lets dex defer authentication to LDAP servers, SAML providers, or established identity providers like GitHub, Google, and Active Directory. Clients write their authentication logic once to talk to dex, then dex handles the protocols for a given backend.
 
+## Quick Start
+
+To build Docker images for `dex` and push tagged images to ECR, use the provided helper script.
+
+```
+./scripts/build-and-push.sh
+```
+
+__Note__: the location of the ECR repository is determined using the `AWS_ACCOUNT_ID` environment variable. Ensure the correct value is exported to your environment before using this script.
+
+### Gigster Cluster Accounts
+
+Cluster                   | Account ID
+--------------------------|-----------
+hosting.gigster.com       | `569325332953`
+gdeqa.gigsternetwork.com  | `832873517058`
+gdedev.gigsternetwork.com | `025889284855`
+
 ## ID Tokens
 
 ID Tokens are an OAuth2 extension introduced by OpenID Connect and dex's primary feature. ID Tokens are [JSON Web Tokens][jwt-io] (JWTs) signed by dex and returned as part of the OAuth2 response that attest to the end user's identity. An example JWT might look like:
@@ -50,14 +68,6 @@ For details on how to request or validate an ID Token, see [_"Writing apps that 
 Dex's main production use is as an auth-N addon in CoreOS's enterprise Kubernetes solution, [Tectonic][tectonic]. Dex runs natively on top of any Kubernetes cluster using Third Party Resources and can drive API server authentication through the OpenID Connect plugin. Clients, such as the [Tectonic Console][tectonic-console] and `kubectl`, can act on behalf users who can login to the cluster through any identity provider dex supports.
 
 More docs for running dex as a Kubernetes authenticator can be found [here](Documentation/kubernetes.md).
-
-## Setup
-
-```
-make docker-image-example-app
-docker tag quay.io/coreos/dex-example-app:71153dd41ea2403452391d200dc0f0b476325d1a-dirty 569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
-docker push  569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
-```
 
 ## Documentation
 
