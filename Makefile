@@ -6,8 +6,9 @@ export PATH := $(PWD)/bin:$(PATH)
 TAG ?="latest"
 VERSION ?= $(shell ./scripts/git-version)
 
-DOCKER_REPO=569325332953.dkr.ecr.us-east-1.amazonaws.com/dex
-DOCKER_REPO_EXAMPLE_APP=569325332953.dkr.ecr.us-east-1.amazonaws.com/dex-signin
+AWS_ACCOUNT_ID ?="569325332953"
+DOCKER_REPO=$(AWS_ACCOUNT_ID).dkr.ecr.us-east-1.amazonaws.com/dex
+DOCKER_REPO_EXAMPLE_APP=$(AWS_ACCOUNT_ID).dkr.ecr.us-east-1.amazonaws.com/dex-signin
 DOCKER_IMAGE=$(DOCKER_REPO):$(VERSION)
 DOCKER_IMAGE_EXAMPLE_APP=$(DOCKER_REPO_EXAMPLE_APP):$(VERSION)
 
@@ -27,7 +28,7 @@ bin/dex: check-go-version
 
 bin/example-app: check-go-version
 	@mkdir -p static/
-	@cp -r cmd/example-app/static/ static/
+	@cp -r cmd/example-app/static/* static/
 	@go install -v -ldflags $(LD_FLAGS) $(REPO_PATH)/cmd/example-app
 
 bin/grpc-client: check-go-version
