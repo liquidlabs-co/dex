@@ -97,7 +97,8 @@ data:
         #
         # A user MUST be a member of at least one of the following orgs to
         # authenticate with dex.
-        org: gigster-eng
+        orgs:
+        - name: gigster-eng
     oauth2:
       skipApprovalScreen: true
 
