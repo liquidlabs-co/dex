@@ -86,7 +86,7 @@ function create_etcd {
   systemd-run --unit=dex-etcd \
       rkt run --uuid-file-save=$UUID_FILE --insecure-options=image \
 	  --net=host \
-	  docker://quay.io/coreos/etcd:v3.2.9
+	  docker://quay.io/coreos/etcd:v3.3.0
 
   wait_for_file $UUID_FILE
 
