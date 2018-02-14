@@ -19,7 +19,7 @@ spec:
           - containerPort: 5555
             name: signin-port
           command:
-          - "./bin/example-app"
+          - "example-app"
           - --redirect-uri=https://signin.${CLUSTER_NAME}/callback
           - --client-id=example-app
           - --client-secret=ZXhhbXBsZS1hcHAtc2VjcmV0
