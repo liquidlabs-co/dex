@@ -1,0 +1,35 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: gde-dex
+  labels:
+    name: dex
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: dexrole
+  namespace: gde-dex
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: dex-role-binding
+subjects:
+- kind: ServiceAccount
+  name: dex-sa
+  namespace: gde-dex
+roleRef:
+  kind: ClusterRole
+  name: dexrole
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dex-sa
+  namespace: gde-dex

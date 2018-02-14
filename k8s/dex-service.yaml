@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex
+  namespace: gde-dex
+  annotations:
+    dns.alpha.kubernetes.io/external: "dex.${CLUSTER_NAME}"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:${AWS_ACCOUNT_ID}:certificate/${DEX_CERTIFICATE_ID}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+spec:
+  ports:
+  - name: dex
+    port: 5556
+    protocol: TCP
+    targetPort: 5556
+  selector:
+    app: dex
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex-signin
+  namespace: gde-dex
+  annotations:
+    dns.alpha.kubernetes.io/external: "signin.${CLUSTER_NAME}"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:${AWS_ACCOUNT_ID}:certificate/${DEX_SIGNIN_CERTIFICATE_ID}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 5555
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 5555
+  selector:
+    app: dex-signin
+  type: LoadBalancer

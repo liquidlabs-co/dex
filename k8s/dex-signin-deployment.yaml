@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: dex-signin
+  name: dex-signin
+  namespace: gde-dex
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dex-signin
+    spec:
+      containers:
+        - image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
+          name: dex-signin
+          ports:
+          - containerPort: 5555
+            name: signin-port
+          command:
+          - "./bin/example-app"
+          - --redirect-uri=https://signin.${CLUSTER_NAME}/callback
+          - --client-id=example-app
+          - --client-secret=ZXhhbXBsZS1hcHAtc2VjcmV0
+          - --issuer=https://dex.${CLUSTER_NAME}:5556
+          - --issuer-root-ca=/etc/dex/tls/tls.crt
+          - --listen=http://0.0.0.0:5555
+          - --debug
+          env:
+          - name: GITHUB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: github-client
+                key: client-id
+          - name: GITHUB_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: github-client
+                key: client-secret
+
+          volumeMounts:
+            - name: tls
+              mountPath: /etc/dex/tls
+      volumes:
+        - name: tls
+          secret:
+            secretName: dex.${CLUSTER_NAME}.tls
