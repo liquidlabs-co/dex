@@ -92,13 +92,13 @@ func (d debugTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 func cmd() *cobra.Command {
 	var (
-		a         	app
-		issuerURL 	string
-		listen    	string
-		tlsCert   	string
-		tlsKey    	string
-		rootCAs   	string
-		debug     	bool
+		a         app
+		issuerURL string
+		listen    string
+		tlsCert   string
+		tlsKey    string
+		rootCAs   string
+		debug     bool
 	)
 	c := cobra.Command{
 		Use:   "example-app",
