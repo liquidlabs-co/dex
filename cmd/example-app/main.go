@@ -29,6 +29,7 @@ type app struct {
 	clientID     string
 	clientSecret string
 	redirectURI  string
+	clusterName  string
 
 	verifier *oidc.IDTokenVerifier
 	provider *oidc.Provider
@@ -91,13 +92,13 @@ func (d debugTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 func cmd() *cobra.Command {
 	var (
-		a         app
-		issuerURL string
-		listen    string
-		tlsCert   string
-		tlsKey    string
-		rootCAs   string
-		debug     bool
+		a         	app
+		issuerURL 	string
+		listen    	string
+		tlsCert   	string
+		tlsKey    	string
+		rootCAs   	string
+		debug     	bool
 	)
 	c := cobra.Command{
 		Use:   "example-app",
@@ -201,6 +202,7 @@ func cmd() *cobra.Command {
 	c.Flags().StringVar(&tlsCert, "tls-cert", "", "X509 cert file to present when serving HTTPS.")
 	c.Flags().StringVar(&tlsKey, "tls-key", "", "Private key for the HTTPS cert.")
 	c.Flags().StringVar(&rootCAs, "issuer-root-ca", "", "Root certificate authorities for the issuer. Defaults to host certs.")
+	c.Flags().StringVar(&a.clusterName, "cluster-name", "hosting.gigster.com", "Name of this k8s cluster.")
 	c.Flags().BoolVar(&debug, "debug", false, "Print all request and responses from the OpenID Connect issuer.")
 	return &c
 }
@@ -317,5 +319,5 @@ func (a *app) handleCallback(w http.ResponseWriter, r *http.Request) {
 	buff := new(bytes.Buffer)
 	json.Indent(buff, []byte(claims), "", "  ")
 
-	renderToken(w, a.redirectURI, rawIDToken, token.RefreshToken, buff.Bytes())
+	renderToken(w, a.redirectURI, rawIDToken, token.RefreshToken, buff.Bytes(), a.clusterName)
 }
