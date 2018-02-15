@@ -26,6 +26,7 @@ spec:
           - --issuer=https://dex.${CLUSTER_NAME}:5556
           - --issuer-root-ca=/etc/dex/tls/tls.crt
           - --listen=http://0.0.0.0:5555
+          - --cluster-name=${CLUSTER_NAME}
           - --debug
           env:
           - name: GITHUB_CLIENT_ID
