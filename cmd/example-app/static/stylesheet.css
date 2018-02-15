@@ -18,9 +18,8 @@ pre {
     font-size: 95%;
     line-height: 140%;
     white-space: pre;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -o-pre-wrap;
+    white-space: -moz-pre;
+    white-space: -o-pre;
 }
 
 code {
@@ -28,14 +27,8 @@ code {
     font-size: 95%;
     line-height: 140%;
     white-space: pre;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -o-pre-wrap;
     background: #faf8f0;
-}
-
-#content code {
-    display: block;
+    display: inline-block;
     padding: 0.5em 1em;
     border: 1px solid #bebab0;
 }

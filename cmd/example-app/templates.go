@@ -41,23 +41,19 @@ var tokenTmpl = template.Must(template.New("token.html").Parse(`<html>
   <body>
     <div>
       <p> First time setting up?  Use these Commands!
-      <pre><code>
-      export K8S_TOKEN={{ .IDToken }}
-      export K8S_CLUSTER_NAME=hosting.gigster.com
-      export K8S_CA_FILE=~/${K8S_CLUSTER_NAME}.cert
-      curl -o ${K8S_CA_FILE} --noproxy '*' -k https://s3.amazonaws.com/gigster-network-cluster-keys/hosting.gigster.com/cluster.ca.cert
-      kubectl config set-credentials github_profile --token=${K8S_TOKEN}
-      kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=${K8S_CA_FILE} --server=https://api.${K8S_CLUSTER_NAME} --embed-certs=true
-      kubectl config set-context gigsternetwork --user=github_profile --cluster=${K8S_CLUSTER_NAME}
-      kubectl config use-context gigsternetwork
-      </code></pre>
+      <pre><code>export K8S_TOKEN={{ .IDToken }}
+export K8S_CLUSTER_NAME=hosting.gigster.com
+export K8S_CA_FILE=~/${K8S_CLUSTER_NAME}.cert
+curl -o ${K8S_CA_FILE} --noproxy '*' -k https://s3.amazonaws.com/gigster-network-cluster-keys/${K8S_CLUSTER_NAME}/cluster.ca.cert
+kubectl config set-credentials ${K8S_CLUSTER_NAME} --token=${K8S_TOKEN}
+kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=${K8S_CA_FILE} --server=https://api.${K8S_CLUSTER_NAME} --embed-certs=true
+kubectl config set-context ${K8S_CLUSTER_NAME} --user=${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME}
+kubectl config use-context ${K8S_CLUSTER_NAME}</code></pre>
 
       <p> Refreshing your login? Use these Commands!
-      <pre><code>
-      export K8S_TOKEN={{ .IDToken }}
-      kubectl config set-credentials github_profile --token=${K8S_TOKEN}
-      kubectl config use-context gigsternetwork
-      </code></pre>
+      <pre><code>export K8S_TOKEN={{ .IDToken }}
+kubectl config set-credentials ${K8S_CLUSTER_NAME} --token=${K8S_TOKEN}
+kubectl config use-context ${K8S_CLUSTER_NAME}</code></pre>
     </div>
   </body>
 </html>
