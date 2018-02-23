@@ -45,7 +45,7 @@ var tokenTmpl = template.Must(template.New("token.html").Parse(`<html>
       <pre><code>export K8S_TOKEN={{ .IDToken }}
 export K8S_CLUSTER_NAME={{ .ClusterName }}
 export K8S_CA_FILE=~/${K8S_CLUSTER_NAME}.cert
-curl -o ${K8S_CA_FILE} --noproxy '*' -k https://s3.amazonaws.com/gigster-network-cluster-keys/${K8S_CLUSTER_NAME}/cluster.ca.cert
+curl -o ${K8S_CA_FILE} --noproxy '*' -k 'https://s3.amazonaws.com/gigster-network-cluster-keys/${K8S_CLUSTER_NAME}/cluster.ca.cert'
 kubectl config set-credentials ${K8S_CLUSTER_NAME}-github --token=${K8S_TOKEN}
 kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=${K8S_CA_FILE} --server=https://api.${K8S_CLUSTER_NAME} --embed-certs=true
 kubectl config set-context ${K8S_CLUSTER_NAME} --user=${K8S_CLUSTER_NAME}-github --cluster=${K8S_CLUSTER_NAME}
