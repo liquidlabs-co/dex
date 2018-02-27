@@ -4,7 +4,7 @@ metadata:
   name: dex
   namespace: gde-dex
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "dex.${CLUSTER_NAME}"
+    dns.alpha.kubernetes.io/external: "dex.${CLUSTER_DOMAIN}"
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:${AWS_ACCOUNT_ID}:certificate/${DEX_CERTIFICATE_ID}
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
 spec:
@@ -23,7 +23,7 @@ metadata:
   name: dex-signin
   namespace: gde-dex
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "signin.${CLUSTER_NAME}"
+    dns.alpha.kubernetes.io/external: "signin.${CLUSTER_DOMAIN}"
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:${AWS_ACCOUNT_ID}:certificate/${DEX_SIGNIN_CERTIFICATE_ID}
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
 spec:

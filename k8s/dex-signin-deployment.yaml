@@ -20,10 +20,10 @@ spec:
             name: signin-port
           command:
           - "example-app"
-          - --redirect-uri=https://signin.${CLUSTER_NAME}/callback
+          - --redirect-uri=https://signin.${CLUSTER_DOMAIN}/callback
           - --client-id=example-app
           - --client-secret=ZXhhbXBsZS1hcHAtc2VjcmV0
-          - --issuer=https://dex.${CLUSTER_NAME}:5556
+          - --issuer=https://dex.${CLUSTER_DOMAIN}:5556
           - --issuer-root-ca=/etc/dex/tls/tls.crt
           - --listen=http://0.0.0.0:5555
           - --cluster-name=${CLUSTER_NAME}
@@ -46,4 +46,4 @@ spec:
       volumes:
         - name: tls
           secret:
-            secretName: dex.${CLUSTER_NAME}.tls
+            secretName: dex.${CLUSTER_DOMAIN}.tls
