@@ -6,7 +6,16 @@ metadata:
   name: dex-signin
   namespace: gde-dex
 spec:
-  replicas: 1
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: dex-signin
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
   template:
     metadata:
       labels:
