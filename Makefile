@@ -6,9 +6,9 @@ export PATH := $(PWD)/bin:$(PATH)
 TAG ?="latest"
 VERSION ?= $(shell ./scripts/git-version)
 
-AWS_ACCOUNT_ID ?="569325332953"
-DOCKER_REPO=$(AWS_ACCOUNT_ID).dkr.ecr.us-east-1.amazonaws.com/dex
-DOCKER_REPO_EXAMPLE_APP=$(AWS_ACCOUNT_ID).dkr.ecr.us-east-1.amazonaws.com/dex-signin
+GCP_PROJECT_ID ?="gcp-gde"
+DOCKER_REPO=gcr.io/$(GCP_PROJECT_ID)/dex
+DOCKER_REPO_EXAMPLE_APP=gcr.io/$(GCP_PROJECT_ID)/dex-signin
 DOCKER_IMAGE=$(DOCKER_REPO):$(VERSION)
 DOCKER_IMAGE_EXAMPLE_APP=$(DOCKER_REPO_EXAMPLE_APP):$(VERSION)
 
