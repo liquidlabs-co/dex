@@ -20,7 +20,7 @@ spec:
     spec:
       serviceAccountName: dex-sa
       containers:
-      - image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/dex:latest
+      - image: ${REPO_URI}/dex:latest
         name: dex
         command: ["/usr/local/bin/dex", "serve", "/etc/dex/cfg/config.yaml"]
         ports:

@@ -22,7 +22,7 @@ spec:
         app: dex-signin
     spec:
       containers:
-        - image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/dex-signin:latest
+        - image: ${REPO_URI}/dex-signin:latest
           name: dex-signin
           ports:
           - containerPort: 5555
