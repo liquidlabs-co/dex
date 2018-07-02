@@ -6,7 +6,7 @@ export PATH := $(PWD)/bin:$(PATH)
 TAG ?="latest"
 VERSION ?= $(shell ./scripts/git-version)
 
-GCP_PROJECT_ID ?="gcp-gde"
+GCP_PROJECT_ID ?="gde-core"
 DOCKER_REPO=gcr.io/$(GCP_PROJECT_ID)/dex
 DOCKER_REPO_EXAMPLE_APP=gcr.io/$(GCP_PROJECT_ID)/dex-signin
 DOCKER_IMAGE=$(DOCKER_REPO):$(VERSION)
